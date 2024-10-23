@@ -1,0 +1,85 @@
+/* homePageStyles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 230 25% 5%;
+    --foreground: 210 40% 98%;
+    
+    /* Vibrant primary colors */
+    --primary: 262 83% 58%;
+    --primary-foreground: 210 40% 98%;
+    
+    /* Rich secondary colors */
+    --secondary: 199 89% 48%;
+    --secondary-foreground: 210 40% 98%;
+    
+    /* Subtle muted tones */
+    --muted: 217 19% 27%;
+    --muted-foreground: 215 20% 65%;
+    
+    /* Card and border colors */
+    --card: 230 25% 7%;
+    --card-foreground: 210 40% 98%;
+    --border: 230 25% 15%;
+    
+    /* Accent colors */
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
+    
+    /* Additional theme colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --ring: 262 83% 58%;
+    
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(var(--primary) / 0.15), transparent 40%),
+      radial-gradient(circle at 0% 50%, rgba(var(--secondary) / 0.1), transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 11;
+    background: var(--accent);
+    transform-origin: 0%;
+}

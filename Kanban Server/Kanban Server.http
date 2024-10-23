@@ -1,0 +1,48 @@
+@baseUrl = http://localhost:5209/api
+
+### Register a new user
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "Username": "newuser",
+  "Email": "newuser@example.com",
+  "Password": "StrongPassword123!"
+}
+
+### Login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "Email": "newuser@example.com",
+  "Password": "StrongPassword123!"
+}
+
+### Create a new board (requires authentication)
+POST {{baseUrl}}/boards
+Content-Type: application/json
+Authorization: Bearer YOUR_AUTH_TOKEN_HERE
+
+{
+  "Title": "My New Board"
+}
+
+### Add a task to a board (requires authentication)
+POST {{baseUrl}}/boards/1/tasks
+Content-Type: application/json
+Authorization: Bearer YOUR_AUTH_TOKEN_HERE
+
+{
+  "Title": "New Task",
+  "Status": "Backlog",
+  "Description": "This is a new task",
+  "LinkUrl": "https://example.com",
+  "LinkName": "Example Link"
+}
+
+
+### Get all boards for the logged-in user (requires authentication)
+GET {{baseUrl}}/boards
+Content-Type: application/json
+Authorization: Bearer YOUR_AUTH_TOKEN_HERE

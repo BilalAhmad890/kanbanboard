@@ -10,6 +10,7 @@ namespace Kanban_Server.DTOs
         [Required(ErrorMessage = "Status is required")]
         public string Status { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Description is required")]
         [StringLength(1000, MinimumLength = 1, ErrorMessage = "Description must be between 1 and 1000 characters")]
         public string Description { get; set; } = string.Empty;
 
