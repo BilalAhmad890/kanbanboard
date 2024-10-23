@@ -3,27 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Quote } from 'lucide-react';
-
-const testimonials = [
-  {
-    text: "This Kanban board has transformed how our team manages projects. It's intuitive and powerful!",
-    author: "Sarah Johnson",
-    role: "Product Manager",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100",
-  },
-  {
-    text: "The best project management tool we've used. The interface is clean and the features are exactly what we need.",
-    author: "Michael Chen",
-    role: "Tech Lead",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",
-  },
-  {
-    text: "Incredible tool for keeping our remote team organized and on track. Highly recommended!",
-    author: "Emily Rodriguez",
-    role: "Team Lead",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100",
-  },
-];
+import { testimonials } from '@/lib/Constant.ts';
 
 export function TestimonialSlider() {
   const [current, setCurrent] = useState(0);

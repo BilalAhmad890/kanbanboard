@@ -80,6 +80,6 @@
     right: 0;
     height: 3px;
     z-index: 11;
-    background: var(--accent);
+    background: hsl(262 83% 58%);
     transform-origin: 0%;
 }

@@ -1,12 +1,6 @@
 import { motion } from 'framer-motion';
 import { Separator } from '@/components/ui/separator';
-
-const footerLinks = {
-  Product: ['Features', 'Pricing', 'Roadmap', 'Updates'],
-  Company: ['About', 'Blog', 'Careers', 'Contact'],
-  Resources: ['Documentation', 'Help Center', 'API', 'Status'],
-  Legal: ['Privacy', 'Terms', 'Security', 'Cookies'],
-};
+import { footerLinks } from '@/lib/Constant.ts';
 
 export function Footer() {
   const containerVariants = {
@@ -32,7 +26,7 @@ export function Footer() {
 
   return (
     <footer className="relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted to-background opacity-50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
       <div className="relative z-10 py-16 px-4">
         <motion.div
           className="max-w-6xl mx-auto"

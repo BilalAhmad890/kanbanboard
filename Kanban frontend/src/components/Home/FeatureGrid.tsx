@@ -1,33 +1,7 @@
 import { motion } from 'framer-motion';
-import { KanbanSquare, Users, LineChart, Zap } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { features } from '@/lib/Constant.ts';
 
-const features = [
-  {
-    title: 'Organize Projects',
-    description: 'Create and manage tasks with our intuitive drag-and-drop interface',
-    icon: KanbanSquare,
-    gradient: 'from-primary to-secondary',
-  },
-  {
-    title: 'Team Collaboration',
-    description: 'Work together seamlessly with real-time updates and sharing',
-    icon: Users,
-    gradient: 'from-secondary to-primary',
-  },
-  {
-    title: 'Track Progress',
-    description: 'Monitor project advancement with visual progress tracking',
-    icon: LineChart,
-    gradient: 'from-primary to-secondary',
-  },
-  {
-    title: 'Boost Productivity',
-    description: 'Streamline your workflow with automated task management',
-    icon: Zap,
-    gradient: 'from-secondary to-primary',
-  },
-];
 
 export function FeatureGrid() {
   const containerVariants = {
