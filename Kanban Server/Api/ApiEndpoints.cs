@@ -4,6 +4,8 @@ using Kanban_Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+
 
 
 
@@ -22,7 +24,9 @@ namespace Kanban_Server.Api
                 var user = new User { UserName = dto.Username, Email = dto.Email };
                 var result = await userManager.CreateAsync(user, dto.Password);
 
-                return result.Succeeded ? Results.Ok("User registered") : Results.BadRequest(result.Errors);
+                return result.Succeeded
+           ? Results.Ok(new { message = "User registered" })
+           : Results.BadRequest(new { message = "Registration failed", errors = result.Errors });
             });
 
             group.MapPost("/login", async (LoginDto dto, SignInManager<User> signInManager) =>
@@ -32,6 +36,26 @@ namespace Kanban_Server.Api
 
                 var result = await signInManager.PasswordSignInAsync(user, dto.Password, isPersistent: true, lockoutOnFailure: false);
                 return result.Succeeded ? Results.Ok("Login successful") : Results.BadRequest("Invalid login");
+            });
+
+
+            group.MapPost("/logout", async (SignInManager<User> signInManager) =>
+            {
+                await signInManager.SignOutAsync();
+                return Results.Ok(new { message = "Logged out successfully" });
+            });
+
+            group.MapGet("/check-auth", (HttpContext httpContext, UserManager<User> userManager) =>
+            {
+                var user = httpContext.User; 
+                if (user.Identity?.IsAuthenticated == true)
+                {
+                    var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var userDetails = userManager.FindByIdAsync(userId).Result;
+
+                    return Results.Ok(new { isAuthenticated = true, user = userDetails });
+                }
+                return Results.Ok(new { isAuthenticated = false });
             });
 
             group.MapPost("/boards", [Authorize] async (BoardDto dto, DataContext context, UserManager<User> userManager, HttpContext httpContext) =>
@@ -50,6 +74,7 @@ namespace Kanban_Server.Api
                     Title = dto.Title,
                     Description = dto.Description,
                     UserId = user.Id,
+                    Created = DateTime.Now,
                 };
                 context.Boards.Add(board);
                 await context.SaveChangesAsync();
@@ -73,11 +98,11 @@ namespace Kanban_Server.Api
                 var task = new Models.Task
                 {
                     Title = dto.Title,
-                    Description = dto.Description,  
-                    LinkUrl = dto.LinkUrl,         
+                    Description = dto.Description,
+                    LinkUrl = dto.LinkUrl,
                     LinkName = dto.LinkName,
                     DateAndTime = DateTime.Now,
-                    Status = Enum.Parse<Models.TaskStatus>(dto.Status), 
+                    Status = Enum.Parse<Models.TaskStatus>(dto.Status),
                     BoardId = boardId
                 };
 
@@ -111,6 +136,7 @@ namespace Kanban_Server.Api
                                 Id = b.Id,
                                 Title = b.Title,
                                 Description = b.Description,
+                                Created = b.Created,
                                 Tasks = b.Tasks.Select(t => new GetTaskDto
                                 {
                                     Id = t.Id,
@@ -127,6 +153,41 @@ namespace Kanban_Server.Api
                 return Results.Ok(boardsWithTasks);
             });
 
+
+            group.MapPut("/update-profile", [Authorize] async (ProfileDto dto, UserManager<User> userManager, HttpContext httpContext) =>
+            {
+                var user = await userManager.GetUserAsync(httpContext.User);
+                if (user == null) return Results.Unauthorized();
+                if (user.UserName == dto.UserName) return Results.BadRequest(new{message = "Same Username as Before"});
+
+                user.UserName = dto.UserName;
+
+                var result = await userManager.UpdateAsync(user);
+                return result.Succeeded
+                    ? Results.Ok(new { message = "User profile updated successfully" })
+                    : Results.BadRequest(new { message = "Failed to update profile", errors = result.Errors });
+            });
+
+
+            group.MapDelete("/delete-user", [Authorize] async (UserManager<User> userManager, SignInManager<User> signInManager, HttpContext httpContext) =>
+            {
+                var user = await userManager.GetUserAsync(httpContext.User);
+                if (user == null) return Results.Unauthorized();
+
+                var result = await userManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                {
+                    return Results.BadRequest(new { message = "Failed to delete user", errors = result.Errors });
+                }
+
+                // Sign the user out and remove session cookies
+                await signInManager.SignOutAsync();
+
+                // Explicitly clear any session cookie related to user authentication
+                httpContext.Response.Cookies.Delete(".AspNetCore.Cookies");
+
+                return Results.Ok(new { message = "User deleted and logged out successfully" });
+            });
 
 
             return group;
