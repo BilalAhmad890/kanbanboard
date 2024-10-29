@@ -9,6 +9,7 @@ public class Board
     public List<Task> Tasks { get; set; } = new();
     public string UserId { get; set; } = string.Empty;
     public User User { get; set; } = null!;
+    public DateTime? Created { get; set;}
 
     }
 
